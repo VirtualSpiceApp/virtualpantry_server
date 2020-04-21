@@ -46,4 +46,7 @@ jobs:
       run: |
         pip install pytest
         pytest tests/test__DBConnection.py
+        
+    - name: Run PyCharm Security Checkers
+      uses: tonybaloney/pycharm-security@master
     
