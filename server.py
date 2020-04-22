@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
 from DBConnection import DBConnection
 import pymongo
-import json
 from bson.json_util import dumps
 from bson import json_util, ObjectId, objectid
 
@@ -51,7 +50,7 @@ def get_number_of_all_items():
     return jsonify(my_conn.get_count_of_all_items())
 
 
-@app.route("/api/test")
+@app.route("/api/getcountoftypes")
 def testestest():
     return jsonify(my_conn.counts_per_type())
 
