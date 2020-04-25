@@ -1,12 +1,13 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from DBConnection2 import DBConnection
 import pymongo
 from bson.json_util import dumps
 from bson import json_util, ObjectId, objectid
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-# TODO: refactor this to another file
 try:
     my_conn = DBConnection("virtualspiceapp",
                             "SpiceAdmin", "SpiceAdmin123")
@@ -48,7 +49,23 @@ def testestest():
 
 @app.route("/api/shoppinglist")
 def shoppinglist():
-    return "shoppinglist"
+    return dumps(my_conn.find_all_items_in_shoppinglist())
+
+@app.route("/api/addItemToShoppingList", methods=['POST'])
+def add_item_to_shopping_list():
+    try:
+        data = request.get_json()
+        my_conn.insert_single_item_to_shoppinglist(
+            data['name'],
+            data['type'],
+            data['location']
+            )
+        # Return 201 status code which mean 'Created'
+        return Response(status=201) 
+    except:
+        # if error occured return 409 which mean 'Conflict'
+        return Response(status=409)
+ 
 
 
 @app.route("/api/recepies")
