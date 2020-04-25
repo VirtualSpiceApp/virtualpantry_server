@@ -1,83 +1,82 @@
-from flask import Flask, jsonify, request
-from DBConnection import DBConnection
+from flask import Flask, jsonify, request, Response
+from DBConnection2 import DBConnection
 import pymongo
-import json
 from bson.json_util import dumps
 from bson import json_util, ObjectId, objectid
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-#TODO: refactor this to another file
 try:
-    my_conn = DBConnection("virtualspiceapp", "spice", "SpiceAdmin","SpiceAdmin123")
+    my_conn = DBConnection("virtualspiceapp",
+                            "SpiceAdmin", "SpiceAdmin123")
 except pymongo.errors.OperationFailure:
     print("Authentication error: The Username or Password is not valid")
 
 
-class JSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
-
-
-
 @app.route("/api/virtualspice")
 def virtualspice():
-    # foods_list = list(my_conn.find_all_items())
-    # return json.dumps(foods_list, default=json_util.default)
-    # return dumps(my_conn.find_all_items())
-    # foods_list = [item for item in my_conn.find_all_items()]
+    return dumps(my_conn.find_all_items_in_spice())
 
-    # return json.dumps(aaaa(foods_list))
-    return dumps(my_conn.find_all_items_2())
-
-
-def aaaa(list):
-    ret_list = []
-    for i in list:
-        if i == objectid.ObjectId:
-            print(i)
-            ret_list.append("almaaa")
-    return ret_list
 
 @app.route("/api/virtualspice/<name>")
 def get_foods_by_name(name):
-    return dumps(my_conn.find_items_by_name(name))
+    return dumps(my_conn.find_items_by_name_in_spice(name))
+
 
 @app.route("/api/virtualspice/delete/<id>")
 def delete_foods_by_id(id):
-    my_conn.delete_single_item_from_db(id)
+    my_conn.delete_single_item_from_spice(id)
     return None
+
 
 @app.route("/api/virtualspice/delete/all")
 def delete_all_foods():
-    my_conn.delete_all_items_from_db()
+    my_conn.delete_all_items_from_spice()
     return None
+
 
 @app.route("/api/getcountofallitems")
 def get_number_of_all_items():
-    return jsonify(my_conn.get_count_of_all_items())
-    
+    return jsonify(my_conn.get_count_of_all_items_in_spice())
 
-@app.route("/api/test")
+
+@app.route("/api/getcountoftypes")
 def testestest():
     return jsonify(my_conn.counts_per_type())
 
+
 @app.route("/api/shoppinglist")
 def shoppinglist():
-    return "shoppinglist"
+    return dumps(my_conn.find_all_items_in_shoppinglist())
+
+@app.route("/api/addItemToShoppingList", methods=['POST'])
+def add_item_to_shopping_list():
+    try:
+        data = request.get_json()
+        my_conn.insert_single_item_to_shoppinglist(
+            data['name'],
+            data['type'],
+            data['location']
+            )
+        # Return 201 status code which mean 'Created'
+        return Response(status=201) 
+    except:
+        # if error occured return 409 which mean 'Conflict'
+        return Response(status=409)
+ 
+
 
 @app.route("/api/recepies")
 def recepies():
     return "recepies"
 
+
 @app.route("/api/login")
 def login():
     return "login"
 
+
 if __name__ == "__main__":
     app.run(port=5000)
-    
-
-
