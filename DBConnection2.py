@@ -106,9 +106,11 @@ class DBConnection():
      database methods for 'shoppinglist' table
     """
 
-    def insert_single_item_to_shoppinglist(self, name: str):
+    def insert_single_item_to_shoppinglist(self, name: str, type: str, location: str):
         self.db[SHOPPINGLIST].insert_one({
-            "name": name
+            "name": name,
+            "type": type,
+            "location": location
         })
 
     def delete_single_item_from_shoppinglist(self, ids):
