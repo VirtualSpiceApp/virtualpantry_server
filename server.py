@@ -77,6 +77,9 @@ def recepies():
 def login():
     return "login"
 
+@app.route("/")
+def start_the_page():
+    return "Server is alive"
 
 if __name__ == "__main__":
     app.run(port=5000)
