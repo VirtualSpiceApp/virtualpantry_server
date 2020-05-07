@@ -66,6 +66,10 @@ def add_item_to_shopping_list():
         # if error occured return 409 which mean 'Conflict'
         return Response(status=409)
  
+@app.route("/api/shoppinglist/delete/<id>")
+def delete_shoppinglist_item_by_id(id):
+    my_conn.delete_single_item_from_shoppinglist(id)
+    return None
 
 
 @app.route("/api/recepies")
@@ -77,6 +81,9 @@ def recepies():
 def login():
     return "login"
 
+@app.route("/")
+def start_the_page():
+    return "Server is alive"
 
 if __name__ == "__main__":
     app.run(port=5000)
