@@ -66,6 +66,10 @@ def add_item_to_shopping_list():
         # if error occured return 409 which mean 'Conflict'
         return Response(status=409)
  
+@app.route("/api/shoppinglist/delete/<id>")
+def delete_foods_by_id(id):
+    my_conn.delete_single_item_from_shoppinglist(id)
+    return None
 
 
 @app.route("/api/recepies")
