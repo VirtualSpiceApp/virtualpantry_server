@@ -67,7 +67,7 @@ def add_item_to_shopping_list():
         return Response(status=409)
  
 @app.route("/api/shoppinglist/delete/<id>")
-def delete_foods_by_id(id):
+def delete_shoppinglist_item_by_id(id):
     my_conn.delete_single_item_from_shoppinglist(id)
     return None
 
