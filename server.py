@@ -4,9 +4,21 @@ import pymongo
 from bson.json_util import dumps
 from bson import json_util, ObjectId, objectid
 from flask_cors import CORS
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 CORS(app)
+
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'virtualspiceapp@gmail.com'
+app.config['MAIL_PASSWORD'] = 'VirtualSpice123'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+
+
+mail = Mail(app)
 
 try:
     my_conn = DBConnection("virtualspiceapp",
@@ -72,9 +84,9 @@ def delete_shoppinglist_item_by_id(id):
     return None
 
 
-@app.route("/api/recepies")
+@app.route("/api/recepie")
 def recepies():
-    return "recepies"
+    return dumps(my_conn.find_all_items_in_recepie())
 
 
 @app.route("/api/login")
@@ -84,6 +96,14 @@ def login():
 @app.route("/")
 def start_the_page():
     return "Server is alive"
+
+@app.route("/mail")
+def send_mail():
+   msg = Message('Hello', sender = 'virtualspiceapp@gmail.com', recipients = ['levilevi183@gmail.com'])
+   msg.body = "This is the email body"
+   mail.send(msg)
+   return "Sent"
+
 
 if __name__ == "__main__":
     app.run(port=5000)
