@@ -3,7 +3,7 @@ from DBConnection2 import DBConnection
 import pymongo
 from bson.json_util import dumps
 from bson import json_util, ObjectId, objectid
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_mail import Mail, Message
 from datetime import datetime
 
@@ -97,6 +97,7 @@ def start_the_page():
     return "Server is alive"
 
 @app.route("/email", methods=["POST"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def send_mail():
     if request.method == 'POST':
         data = request.get_json()
