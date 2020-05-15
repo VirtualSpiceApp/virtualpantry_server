@@ -31,3 +31,4 @@ pymongo==3.10.1
 dnspython==1.16.0
 gunicorn==19.9.0
 Flask-Cors==3.0.8
+Flask-Mail==0.9.1
