@@ -13,7 +13,7 @@ from bson.objectid import ObjectId
 
 SPICE = 'spice'
 SHOPPINGLIST = 'shoppinglist'
-
+RECEPIE = 'recepie'
 
 class DBConnection():
 
@@ -123,4 +123,12 @@ class DBConnection():
         return self.find_all_items(SHOPPINGLIST)
 
 
-my_conn = DBConnection("virtualspiceapp", "SpiceAdmin", "SpiceAdmin123")
+    """ 
+        CRUD (Create, Read, Update, Delete)
+        database methods for 'recepie' table
+    """
+    def find_all_items_in_recepie(self):
+        return self.find_all_items(RECEPIE)
+
+
+# my_conn = DBConnection("virtualspiceapp", "SpiceAdmin", "SpiceAdmin123")
