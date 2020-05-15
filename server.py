@@ -5,6 +5,7 @@ from bson.json_util import dumps
 from bson import json_util, ObjectId, objectid
 from flask_cors import CORS
 from flask_mail import Mail, Message
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -83,11 +84,9 @@ def delete_shoppinglist_item_by_id(id):
     my_conn.delete_single_item_from_shoppinglist(id)
     return None
 
-
 @app.route("/api/recepie")
 def recepies():
     return dumps(my_conn.find_all_items_in_recepie())
-
 
 @app.route("/api/login")
 def login():
@@ -97,12 +96,17 @@ def login():
 def start_the_page():
     return "Server is alive"
 
-@app.route("/mail")
+@app.route("/email", methods=["POST"])
 def send_mail():
-   msg = Message('Hello', sender = 'virtualspiceapp@gmail.com', recipients = ['levilevi183@gmail.com'])
-   msg.body = "This is the email body"
-   mail.send(msg)
-   return "Sent"
+    if request.method == 'POST':
+        data = request.get_json()
+        msg = Message(f'Your shopping list {datetime.utcnow()}', sender = 'virtualspiceapp@gmail.com', recipients = [data["email"]])
+        email_data = my_conn.get_email_data()
+        msg.body = str(email_data)
+        mail.send(msg)
+        return Response(status=200)
+    else:
+        return Response(status=409)  
 
 
 if __name__ == "__main__":

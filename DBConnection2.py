@@ -50,9 +50,11 @@ class DBConnection():
     def find_items_by_name(self, table_name: str, name: str):
         return self.db[table_name].find({"name": name})
 
-    def print_results(self, results):
+    def get_shoppinglist_items_for_email(self, results):
+        shoppinglist_items = set()
         for result in results:
-            print(result)
+            shoppinglist_items.add(result["name"])
+        return shoppinglist_items
 
     def get_count_of_all_items(self, table_name: str):
         return self.db[table_name].count()
@@ -122,6 +124,8 @@ class DBConnection():
     def find_all_items_in_shoppinglist(self):
         return self.find_all_items(SHOPPINGLIST)
 
+    def get_email_data(self):
+        return list(self.get_shoppinglist_items_for_email(self.find_all_items_in_shoppinglist()))
 
     """ 
         CRUD (Create, Read, Update, Delete)
