@@ -70,7 +70,7 @@ class DBConnection():
     def insert_single_item_to_spice(self, name: str, exp_date: datetime, type: str, location: str = "Unknown"):
         self.db[SPICE].insert_one({
             "name": name,
-            "exp_date": exp_date,
+            "exp_date": datetime.fromisoformat(exp_date),
             "location": location,
             "type": type,
             "date_of_shopping": datetime.utcnow()
