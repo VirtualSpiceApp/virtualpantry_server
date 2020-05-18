@@ -37,6 +37,21 @@ def virtualspice():
 def get_foods_by_name(name):
     return dumps(my_conn.find_items_by_name_in_spice(name))
 
+@app.route("/api/addItemToVirtualSpice", methods=['POST'])
+def add_item_to_virtualspice():
+    try:
+        data = request.get_json()
+        my_conn.insert_single_item_to_spice(
+            data['name'],
+            data['exp_date'],
+            data['type'],
+            data['location']
+            )
+        # Return 201 status code which mean 'Created'
+        return Response(status=201) 
+    except:
+        # if error occured return 409 which mean 'Conflict'
+        return Response(status=409)
 
 @app.route("/api/virtualspice/delete/<id>")
 def delete_foods_by_id(id):
